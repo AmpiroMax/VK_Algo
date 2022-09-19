@@ -33,3 +33,7 @@
 
 # VS Code files
 *.vscode
+
+# Debug files
+*.ilk
+*.pdb
