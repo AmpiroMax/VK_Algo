@@ -47,18 +47,6 @@ size_t merge_sort(vector<int> &array, int l, int r)
     return inv_num;
 }
 
-/*
-Tests:
-5
-1 2 3 4 5
-1 2 3 4 5
-
-7
-3 4 1 2 10 5 1
-1 1 2 3 4 5 10
-
-*/
-
 int main()
 {
     vector<int> array;

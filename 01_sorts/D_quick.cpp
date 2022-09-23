@@ -3,20 +3,6 @@
 
 using namespace std;
 
-void swapper(vector<int> &array, int i, int j)
-{
-    int tmp = array[i];
-    array[i] = array[j];
-    array[j] = tmp;
-}
-
-/*
-Location of idicies
-------------------------------------
-   |l      |m1       |m2    [i]   |r
-------------------------------------
-*/
-
 void printArray(const vector<int> &array, int l = 0, int r = -1)
 {
     if (r == -1)
@@ -26,6 +12,7 @@ void printArray(const vector<int> &array, int l = 0, int r = -1)
         cout << array[i] << " ";
     cout << endl;
 }
+
 void split(vector<int> &array, int l, int r, int &med1, int &med2)
 {
     int rand_ind = l + rand() % (r - l);
@@ -35,15 +22,15 @@ void split(vector<int> &array, int l, int r, int &med1, int &med2)
     {
         if (pivot == array[i])
         {
-            swapper(array, med2, i);
+            swap(array[med2], array[i]);
             med2 += 1;
         }
         else if (pivot > array[i])
         {
-            swapper(array, i, med1);
+            swap(array[med1], array[i]);
             if (med1 != med2)
             {
-                swapper(array, i, med2);
+                swap(array[med2], array[i]);
             }
             med1 += 1;
             med2 += 1;
@@ -64,35 +51,6 @@ void quick_sort(vector<int> &array, int l, int r)
     quick_sort(array, l, med1);
     quick_sort(array, med2, r);
 }
-
-/*
-Tests:
-
-5
-1 5 2 7 3
-1 2 3 5 7
-
-5
-1 2 3 4 5
-1 2 3 4 5
-
-7
-3 4 1 2 10 5 1
-1 1 2 3 4 5 10
-
-10
-1 8 2 1 4 7 3 2 3 6
-1 1 2 2 3 3 4 6 7 8
-
-5
-1 1 1 1 1
-1 1 1 1 1
-
-6
-1 2 1 2 1 2
-1 1 1 2 2 2
-
-*/
 
 int main()
 {
