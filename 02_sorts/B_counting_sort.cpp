@@ -3,12 +3,12 @@
 
 using namespace std;
 
-const int m = 101;
+const int M = 101;
 
 int main()
 {
     vector<int> cnt;
-    cnt.resize(m);
+    cnt.resize(M);
 
     int ind;
     for (; cin >> ind;)
@@ -18,7 +18,7 @@ int main()
 
     vector<int> array;
 
-    for (int i = 0; i < m; ++i)
+    for (int i = 0; i < M; ++i)
     {
         for (int j = 0; j < cnt[i]; ++j)
             array.push_back(i);
