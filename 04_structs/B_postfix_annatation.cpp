@@ -4,16 +4,17 @@
 class MyVector
 {
 private:
+    const int INIT_CAPACITY = 8;
     int size;
     int capacity;
-    int *array;
+    int *data;
 
 public:
     MyVector()
     {
         size = 0;
-        capacity = 8;
-        array = new int[capacity];
+        capacity = INIT_CAPACITY;
+        data = new int[capacity];
     }
 
     void push_back(int value)
@@ -23,7 +24,7 @@ public:
             capacity *= 2;
             rewrite_array();
         }
-        array[size++] = value;
+        data[size++] = value;
     }
 
     int pop_back()
@@ -31,15 +32,15 @@ public:
         if (size <= 0)
             throw std::out_of_range("error");
 
-        int rez = array[--size];
+        int result = data[--size];
 
-        if ((capacity > 8) && (size < capacity / 4))
+        if ((capacity > INIT_CAPACITY) && (size < capacity / 4))
         {
             capacity /= 2;
             rewrite_array();
         }
 
-        return rez;
+        return result;
     }
 
     void rewrite_array()
@@ -47,16 +48,16 @@ public:
         int *new_array = new int[capacity];
 
         for (int i = 0; i < size; ++i)
-            new_array[i] = array[i];
+            new_array[i] = data[i];
 
-        delete[] array;
-        array = new_array;
+        delete[] data;
+        data = new_array;
         new_array = nullptr;
     }
 
     ~MyVector()
     {
-        delete[] array;
+        delete[] data;
     }
 };
 

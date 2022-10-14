@@ -4,18 +4,20 @@
 class MyVector
 {
 private:
+    const int INIT_CAPACITY = 8;
+
     int head;
     int tail;
     int capacity;
-    int *array;
+    int *data;
 
 public:
     MyVector()
     {
         head = 0;
         tail = 0;
-        capacity = 8;
-        array = new int[capacity];
+        capacity = INIT_CAPACITY;
+        data = new int[capacity];
     }
 
     void push(int value)
@@ -25,22 +27,22 @@ public:
             capacity *= 2;
             rewrite_array();
         }
-        array[tail] = value;
+        data[tail] = value;
         tail = (tail + 1) % capacity;
     }
 
     int pop()
     {
-        int rez = array[head];
+        int result = data[head];
         head = (head + 1) % capacity;
 
-        if ((capacity > 8) && (get_size() < capacity / 4))
+        if ((capacity > INIT_CAPACITY) && (get_size() < capacity / 4))
         {
             capacity /= 2;
             rewrite_array();
         }
 
-        return rez;
+        return result;
     }
 
     void rewrite_array()
@@ -49,12 +51,12 @@ public:
         int k = head;
         for (int i = 0; i < get_size(); ++i)
         {
-            new_array[i] = array[k];
+            new_array[i] = data[k];
             k = (k + 1) % capacity;
         }
 
-        delete[] array;
-        array = new_array;
+        delete[] data;
+        data = new_array;
         new_array = nullptr;
     }
 
@@ -62,7 +64,7 @@ public:
 
     ~MyVector()
     {
-        delete[] array;
+        delete[] data;
     }
 };
 
