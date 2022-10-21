@@ -9,7 +9,7 @@ class HashTable
 {
 private:
     const int A = 31;
-    const int P = 1'000'000'007;
+    const int P = 1e9 + 7;
     const int INITIAL_SIZE = 1000;
 
     struct Data
@@ -49,6 +49,14 @@ private:
         return result % table.size();
     }
 
+    std::list<HashTable::Data *>::iterator find_iter(const std::string &key_word)
+    {
+        size_t index = hash(key_word);
+        auto iter = std::find_if(table[index].begin(), table[index].end(), [&key_word](Data *data)
+                                 { return data->key_word == key_word; });
+        return iter;
+    }
+
 public:
     HashTable()
     {
@@ -63,7 +71,7 @@ public:
         element->value_word = value_word;
 
         size_t index = hash(key_word);
-        auto iter = std::find_if(table[index].begin(), table[index].end(), [&key_word](Data *data) { return data->key_word == key_word; });
+        auto iter = find_iter(key_word);
 
         if (iter == table[index].end())
         {
@@ -86,7 +94,7 @@ public:
     void delete_element(const std::string &key_word)
     {
         size_t index = hash(key_word);
-        auto iter = std::find_if(table[index].begin(), table[index].end(), [&key_word](Data *data) { return data->key_word == key_word; });
+        auto iter = find_iter(key_word);
 
         if (iter == table[index].end())
             return;
@@ -114,7 +122,7 @@ public:
     std::string get(const std::string &key_word)
     {
         size_t index = hash(key_word);
-        auto iter = std::find_if(table[index].begin(), table[index].end(), [&key_word](Data *data) { return data->key_word == key_word; });
+        auto iter = find_iter(key_word);
 
         if (iter == table[index].end())
             return "none";
@@ -125,7 +133,7 @@ public:
     std::string prev(const std::string &key_word)
     {
         size_t index = hash(key_word);
-        auto iter = std::find_if(table[index].begin(), table[index].end(), [&key_word](Data *data) { return data->key_word == key_word; });
+        auto iter = find_iter(key_word);
 
         if (iter == table[index].end())
             return "none";
@@ -139,7 +147,7 @@ public:
     std::string next(const std::string &key_word)
     {
         size_t index = hash(key_word);
-        auto iter = std::find_if(table[index].begin(), table[index].end(), [&key_word](Data *data) { return data->key_word == key_word; });
+        auto iter = find_iter(key_word);
 
         if (iter == table[index].end())
             return "none";
@@ -158,40 +166,27 @@ int main()
 
     for (; std::cin >> command;)
     {
+        std::string key_word;
+        std::cin >> key_word;
+
         if (command == "put")
         {
-            std::string key_word;
             std::string value_word;
-            std::cin >> key_word >> value_word;
+            std::cin >> value_word;
             my_table.put(key_word, value_word);
         }
 
         if (command == "get")
-        {
-            std::string key_word;
-            std::cin >> key_word;
             std::cout << my_table.get(key_word) << std::endl;
-        }
 
         if (command == "prev")
-        {
-            std::string key_word;
-            std::cin >> key_word;
             std::cout << my_table.prev(key_word) << std::endl;
-        }
+
         if (command == "next")
-        {
-            std::string key_word;
-            std::cin >> key_word;
             std::cout << my_table.next(key_word) << std::endl;
-        }
 
         if (command == "delete")
-        {
-            std::string key_word;
-            std::cin >> key_word;
             my_table.delete_element(key_word);
-        }
     }
 
     return 0;

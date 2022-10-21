@@ -28,13 +28,19 @@ private:
     };
 
     const int INITIAL_SIZE = 1000;
-    const int P = 1000003;
+    const int P = 1e6 + 3;
+
+    // Задаю максимальное значение для переменной A,
+    // используемую для рехеша.
+    const int HASH_A_MAX = 50;
 
     int hash_A;
     int count_filled;
     int count_deleted;
 
     vector<Data> table;
+
+    void rerand_hash_A() { hash_A = rand() % 50; }
 
     size_t hash(int key)
     {
@@ -48,7 +54,7 @@ private:
         int old_size = table.size();
         table.resize(new_size);
 
-        hash_A = rand() % 50;
+        rerand_hash_A();
 
         for (int i = 0; i < old_size; ++i)
         {
@@ -71,7 +77,7 @@ public:
     Set()
     {
         table = vector<Data>(INITIAL_SIZE);
-        hash_A = rand() % 50;
+        rerand_hash_A();
         count_filled = 0;
         count_deleted = 0;
     }
@@ -138,26 +144,17 @@ int main()
     string command;
     for (; cin >> command;)
     {
+        int element;
+        cin >> element;
+
         if (command == "insert")
-        {
-            int element;
-            cin >> element;
             my_set.insert(element);
-        }
 
         if (command == "delete")
-        {
-            int element;
-            cin >> element;
             my_set.delete_element(element);
-        }
 
         if (command == "exists")
-        {
-            int element;
-            cin >> element;
             cout << (my_set.exists(element) ? "true" : "false") << endl;
-        }
     }
     return 0;
 }
