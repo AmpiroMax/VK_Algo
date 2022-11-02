@@ -60,19 +60,8 @@ public:
                     cout << "# ";
                 else
                     cout << s_i << " ";
-            // cout << is_terminal[s_i].second << " ";
             cout << endl;
         }
-        // for (auto V : next)
-        // {
-        //     for (auto s_i : V)
-        //         if (s_i == -1)
-        //             cout << "# ";
-        //         else
-        //             cout << s_i << " ";
-        //     // cout << is_terminal[s_i].second << " ";
-        //     cout << endl;
-        // }
     }
     void print_terminal()
     {
@@ -81,41 +70,6 @@ public:
     }
 };
 
-/*
-shipmyhesheepspe
-5
-he
-she
-heap
-sheep
-ship
-
-qeqwe 
-2
-he
-heap
-
-qeqwe
-4
-live
-life
-lively
-lovely
-
-
-fdsfs
-2
-heap
-he
-
-abababa
-4
-a
-b
-aba
-bab
-
-*/
 int main()
 {
     string text;
@@ -133,48 +87,24 @@ int main()
         trie.insert(str, i);
     }
 
-    // trie.print_next();
-
     for (int i = 0; i < text.size(); ++i)
     {
         int V = 0;
         for (int j = i; j < text.size(); ++j)
         {
-            // cout << V << " " << text[j] << endl;
+
             if (trie.next[V][text[j] - 'a'] == -1)
                 break;
 
             V = trie.next[V][text[j] - 'a'];
-            // cout << V << " " << text[j] << endl;
+
             if (trie.is_terminal[V].first)
                 contains[trie.is_terminal[V].second] = 1;
         }
-        // int V = 0;
-        // cout << "-----------------------" << endl;
-        // for (int j = i; j < text.size(); ++j)
-        // {
-        //     cout << "V, s[j] " << V << " " << text[j] << endl;
-        //     cout << "next    " << trie.next[V][text[j] - 'a'] << endl;
-        //     if (trie.next[V][text[j] - 'a'] == -1)
-        //         break;
-
-        //     // Напоминаю, что первый элемент массива is_terminal
-        //     // это состояние вершины, в второй элемент в случае
-        //     // терминальности равен номеру слова, из ввода
-        //     cout << trie.is_terminal[V].first << " " << trie.is_terminal[V].second << endl;
-        //     if (trie.is_terminal[V].first)
-        //         contains[trie.is_terminal[V].second] = 1;
-
-        //     V = trie.next[V][text[j] - 'a'];
-        // }
-        // cout << "-----------------------" << endl;
     }
 
     for (auto el : contains)
         cout << (el ? "Yes" : "No") << endl;
-
-    // trie.print_next();
-    // trie.print_terminal();
 
     return 0;
 }

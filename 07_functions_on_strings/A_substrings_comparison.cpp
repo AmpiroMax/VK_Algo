@@ -125,32 +125,12 @@ public:
     }
 };
 
-/*
-abababababababababababababababababababababababababaabababababababababababababababababababababababababaabababababababababababababababababababababababababa
-9
-1 5 1 5
-1 3 3 5
-3 5 5 7
-13 17 19 23
-13 30 21 38
-1 1 11 11
-1 1 41 41
-2 4 41 43
-1 41 7 47
-
-
-abbabaabbaababbabaababbaabbabaabbaababbaabbabaababbabaabbaababba
-1
-1 4 7 10
-
-*/
-
 int main()
 {
     string str;
     cin >> str;
     SubstringHasher hasher(str);
-    // hasher.print();
+
     int m;
     cin >> m;
 
@@ -169,16 +149,11 @@ int main()
         Point hashs1 = hasher.get_hash(l1 - 1, r1 - 1);
         Point hashs2 = hasher.get_hash(l2 - 1, r2 - 1);
 
-        // cout << hashs1 << endl;
-        // cout << hashs2 << endl;
-
-        if (hashs1 == hashs2) // && (string(str.begin() + l1, str.begin() + r1) == string(str.begin() + l2, str.begin() + r2)))
+        if (hashs1 == hashs2)
             cout << "Yes" << endl;
         else
             cout << "No" << endl;
     }
-
-    // cout << ((-13) % 3 + 3) % 3 << endl;
 
     return 0;
 }
