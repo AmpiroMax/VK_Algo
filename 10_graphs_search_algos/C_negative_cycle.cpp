@@ -17,7 +17,6 @@ private:
     };
 
     vector<vector<pair<int64_t, int64_t>>> adjlist;
-    vector<int64_t> parent;
     vector<int64_t> dists;
     vector<Status> status;
 
@@ -37,8 +36,6 @@ public:
 
         int64_t n = adjlist.size();
 
-        parent = vector<int64_t>(n, -1);
-
         status = vector<Status>(n, UNREACHED);
         dists = vector<int64_t>(n, INF);
         status[start] = Status::OK;
@@ -49,16 +46,16 @@ public:
             for (int64_t v = 0; v < n; ++v)
             {
                 if (dists[v] != INF)
+                {
                     for (auto [w, u] : adjlist[v])
                     {
                         if (dists[u] > dists[v] + w)
                         {
-                            // cout << v << " " << u << " " << w << endl;
                             dists[u] = dists[v] + w;
                             status[u] = Status::OK;
-                            parent[u] = v;
                         }
                     }
+                }
             }
         }
 
@@ -67,44 +64,17 @@ public:
         for (int64_t v = 0; v < n; ++v)
         {
             if (dists[v] != INF)
+            {
                 for (auto [w, u] : adjlist[v])
                 {
                     if (dists[u] > dists[v] + w)
                     {
-                        neg_cycle_verts.push_back(u);
-
+                        neg_cycle_verts.push_back(v);
                         dists[u] = dists[v] + w;
-                        parent[u] = v;
                     }
                 }
+            }
         }
-
-        // cout << "I| dist[i], parent[i]" << endl;
-        // for (int i = 0; i < n; ++i)
-        //     cout << i << "| " << dists[i] << ", " << parent[i] << endl;
-
-        // for (int64_t v = 0; v < n; ++v)
-        // {
-        //     for (auto [w, u] : adjlist[v])
-        //     {
-        //         if ((status[u] == Status::OK) && (dists[u] > dists[v] + w))
-        //         {
-        //             for (int64_t i = 0; i < n; ++i)
-        //                 v = parent[v];
-
-        //             int64_t curr = parent[v];
-        //             while (curr != v)
-        //             {
-        //                 status[curr] = Status::ONE_OF_NEG;
-        //                 neg_cycle_verts.push_back(curr);
-        //                 curr = parent[curr];
-        //             }
-        //             status[curr] = Status::ONE_OF_NEG;
-        //             neg_cycle_verts.push_back(curr);
-        //             break;
-        //         }
-        //     }
-        // }
 
         while (!neg_cycle_verts.empty())
         {
@@ -120,12 +90,9 @@ public:
                 }
             }
         }
-
-        print_dists(start);
     }
 
-    void
-    print_dists(int64_t start)
+    void print_dists()
     {
         for (int i = 0; i < adjlist.size(); ++i)
         {
@@ -140,103 +107,6 @@ public:
         }
     }
 };
-
-/*
-13 14 5
-1 2 10
-2 3 5
-1 3 100
-3 5 7
-5 4 10
-4 3 -18
-6 1 -1
-4 8 1
-5 7 1
-7 9 1
-7 10 1
-8 11 1
-8 12 1
-13 2 1
-
-3 3 1
-1 1 -1
-2 2 2
-3 3 3
-
-
-2 1 2
-1 1 -1
-
-
-3 4 1
-1 1 -1
-1 2 1
-2 3 1
-3 1 1
-
-8 9 1
-1 2 1
-1 3 1
-2 4 1
-3 5 1
-5 3 -2
-4 6 1
-6 4 -2
-6 8 1
-5 7 1
-
-asn:
-0
-1
--
--
--
--
--
--
-
-
-3 1 1
-2 2 -1
-------
-0
-*
-*
-
-3 1 1
-1 1 -1
-------
--
-*
-*
-
-5 5 1
-1 2 1
-2 3 1
-3 4 1
-3 5 1
-5 2 -1
-------
-0
-1
-2
-3
-3
-
-
-4 5 4
-1 2 1
-2 3 1
-3 1 1
-1 1 -1
-4 3 1
-------
--
--
--
-0
-
-*/
 
 int main()
 {
@@ -258,9 +128,9 @@ int main()
         u--;
         graph.add(v, u, w);
     }
-    // cout << "----------------------" << endl;
+
     graph.ford_bellman(start);
-    // graph.print64_t_dists();
+    graph.print_dists();
 
     return 0;
 }
