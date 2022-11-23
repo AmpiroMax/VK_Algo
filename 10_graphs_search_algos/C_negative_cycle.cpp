@@ -4,133 +4,136 @@
 
 using namespace std;
 
-const int64_t INF = 1e15 * 2000;
+const int INF = 100000;
 
-class NotOrGraph
+class OrGraph
 {
 private:
-    enum Status
-    {
-        OK,
-        NEG,
-        UNREACHED
-    };
-
-    vector<vector<pair<int64_t, int64_t>>> adjlist;
-    vector<int64_t> dists;
-    vector<Status> status;
+    vector<vector<pair<int, int>>> adjlist;
+    vector<vector<int>> next;
+    vector<vector<int>> dist;
+    vector<int> path;
 
 public:
-    NotOrGraph(int64_t n)
+    OrGraph(int n)
     {
         adjlist.resize(n);
-    }
+        dist.resize(n);
 
-    void add(int64_t v, int64_t u, int64_t w)
-    {
-        adjlist[v].push_back({w, u});
-    }
+        next = vector<vector<int>>(n, vector<int>(n, -1));
 
-    void ford_bellman(int64_t start)
-    {
-
-        int64_t n = adjlist.size();
-
-        status = vector<Status>(n, UNREACHED);
-        dists = vector<int64_t>(n, INF);
-        status[start] = Status::OK;
-        dists[start] = 0;
-
-        for (int64_t k = 1; k < n - 1; ++k)
+        for (int i = 0; i < n; ++i)
         {
-            for (int64_t v = 0; v < n; ++v)
+            for (int j = 0; j < n; ++j)
             {
-                if (dists[v] != INF)
+                next[i][j] = j;
+            }
+        }
+    }
+
+    void add(int i, int j, int w)
+    {
+        adjlist[i].push_back({w, j});
+        dist[i].push_back(w);
+    }
+
+    void floid()
+    {
+        int n = adjlist.size();
+        for (int k = 0; k < n; ++k)
+        {
+            for (int u = 0; u < n; ++u)
+            {
+                for (int v = 0; v < n; ++v)
                 {
-                    for (auto [w, u] : adjlist[v])
+                    if (dist[u][k] == INF || dist[k][v] == INF)
+                        continue;
+
+                    if (dist[u][v] > dist[u][k] + dist[k][v])
                     {
-                        if (dists[u] > dists[v] + w)
-                        {
-                            dists[u] = dists[v] + w;
-                            status[u] = Status::OK;
-                        }
+                        dist[u][v] = dist[u][k] + dist[k][v];
+                        next[u][v] = next[u][k];
                     }
                 }
             }
         }
+    }
 
-        vector<int64_t> neg_cycle_verts;
+    void find_path()
+    {
+        int neg_idx = 0;
+        int n = adjlist.size();
 
-        for (int64_t v = 0; v < n; ++v)
+        for (; neg_idx < n; ++neg_idx)
+            if (dist[neg_idx][neg_idx] < 0)
+                break;
+        if (neg_idx == n)
+            return;
+
+        int curr = next[neg_idx][neg_idx];
+
+        for (int i = 0; i < n; ++i)
         {
-            if (dists[v] != INF)
-            {
-                for (auto [w, u] : adjlist[v])
-                {
-                    if (dists[u] > dists[v] + w)
-                    {
-                        neg_cycle_verts.push_back(v);
-                        dists[u] = dists[v] + w;
-                    }
-                }
-            }
+            curr = next[curr][neg_idx];
+        }
+        neg_idx = curr;
+        curr = next[neg_idx][neg_idx];
+        while (curr != neg_idx)
+        {
+            path.push_back(curr);
+            curr = next[curr][neg_idx];
+        }
+        path.push_back(curr);
+    }
+
+    void print_path()
+    {
+        if (path.size() == 0)
+        {
+            cout << "NO" << endl;
+            return;
         }
 
-        while (!neg_cycle_verts.empty())
-        {
-            int64_t v = neg_cycle_verts.back();
-            neg_cycle_verts.pop_back();
-            status[v] = Status::NEG;
+        cout << "YES" << endl;
+        cout << path.size() << endl;
 
-            for (auto [w, u] : adjlist[v])
-            {
-                if (status[u] != Status::NEG)
-                {
-                    neg_cycle_verts.push_back(u);
-                }
-            }
-        }
+        for (auto el : path)
+            cout << el + 1 << " ";
+        cout << endl;
     }
 
     void print_dists()
     {
-        for (int i = 0; i < adjlist.size(); ++i)
+        for (auto row : dist)
         {
-            if (status[i] == Status::OK)
-                cout << dists[i] << endl;
-
-            if (status[i] == Status::NEG)
-                cout << "-" << endl;
-
-            if (status[i] == Status::UNREACHED)
-                cout << "*" << endl;
+            for (auto el : row)
+            {
+                cout << el << " ";
+            }
+            cout << endl;
         }
     }
 };
 
 int main()
 {
-    int64_t n;
-    int64_t m;
-    int64_t start;
-    cin >> n >> m >> start;
-    start--;
+    int n;
+    cin >> n;
+    OrGraph graph(n);
 
-    NotOrGraph graph(n);
-
-    for (int64_t i = 0; i < m; ++i)
+    for (int i = 0; i < n; ++i)
     {
-        int v;
-        int64_t u;
-        int64_t w;
-        cin >> v >> u >> w;
-        v--;
-        u--;
-        graph.add(v, u, w);
+        for (int j = 0; j < n; ++j)
+        {
+            int w;
+            cin >> w;
+            graph.add(i, j, w);
+        }
     }
 
-    graph.ford_bellman(start);
-    graph.print_dists();
+    graph.floid();
+    graph.find_path();
+    graph.print_path();
 
     return 0;
 }
