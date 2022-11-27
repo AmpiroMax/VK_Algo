@@ -17,7 +17,7 @@ struct Node
     }
 };
 
-class AVL
+class VanilaBST
 {
 private:
     Node *root = nullptr;
@@ -170,7 +170,7 @@ int main()
     string command;
     int value;
 
-    AVL tree;
+    VanilaBST tree;
 
     for (; cin >> command >> value;)
     {
