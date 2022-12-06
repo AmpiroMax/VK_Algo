@@ -37,3 +37,6 @@
 # Debug files
 *.ilk
 *.pdb
+
+# Other
+OLYMP/
